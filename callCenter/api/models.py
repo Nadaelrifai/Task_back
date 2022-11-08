@@ -6,8 +6,6 @@ from django.db import models
 class Customer(models.Model):
     firstName = models.CharField(max_length=200, null=False)
     lastName = models.CharField(max_length=200, null=False)
-    address = models.ForeignKey('Address', null=True, on_delete=models.CASCADE)
-    phone = models.ForeignKey('Phone', null=True, on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -15,6 +13,7 @@ class Customer(models.Model):
         return self.firstName
 
 class Address(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     address=models.CharField(max_length=300)
     zip_code = models.CharField(max_length=12)
     city = models.CharField(max_length=300)
@@ -26,7 +25,8 @@ class Address(models.Model):
         return self.address
 
 class Phone(models.Model):
-    phone = models.CharField(max_length=200)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=200, unique= True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)      
     def __str__(self):
